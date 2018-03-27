@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="General">
+        <EditTextPreference
+            android:capitalize="words"
+            android:defaultValue="@string/pref_default_display_name"
+            android:inputType="textCapWords"
+            android:key="display_name"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_display_name" />
+
+        <ListPreference
+            android:defaultValue="-1"
+            android:key="bg_color"
+            android:title="@string/pref_bg_color_title"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:entries="@array/pref_bg_colors"
+            android:entryValues="@array/pref_bg_values" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Miscellaneous">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="notifications_new_message"
+            android:title="@string/pref_title_new_message_notifications" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="vibrate"
+            android:title="@string/pref_title_vibrate" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="data_collecting"
+            android:title="@string/pref_allow_collecting" />
+    </PreferenceCategory>
+
+    <Preference android:title="@string/about" >
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://sites.google.com/site/fiiandroidprogramming/home" />
+    </Preference>
+
+</PreferenceScreen>

@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">ShopOnline</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">Silviu Rusu</string>
+
+    <string name="pref_bg_color_title">Background color</string>
+    <string-array name="pref_bg_colors">
+        <item>Smart</item>
+        <item>Fresh</item>
+        <item>Hacker</item>
+        <item>Pure</item>
+    </string-array>
+    
+    <string-array name="pref_bg_values">
+        <item>smart</item>
+        <item>fresh</item>
+        <item>hacker</item>
+        <item>pure</item>
+    </string-array>
+
+    <string name="pref_allow_collecting">Allow data collecting</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+
+    <string name="about">About</string>
+    <string name="product_name_tv">Nume</string>
+    <string name="menu_add_product">Add product</string>
+    <string name="menu_gosmart">Go smart</string>
+    <string name="menu_sort">Sort</string>
+    <string name="menu_view_count">View count</string>
+    <string name="menu_settings">Settings</string>
+</resources>
