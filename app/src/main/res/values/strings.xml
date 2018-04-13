@@ -4,6 +4,8 @@
 
     <!-- Strings related to Settings -->
 
+    <string name="shared_prefs">shop_prefs</string>
+
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
@@ -17,7 +19,7 @@
         <item>Hacker</item>
         <item>Pure</item>
     </string-array>
-    
+
     <string-array name="pref_bg_values">
         <item>smart</item>
         <item>fresh</item>
@@ -37,8 +39,11 @@
     <string name="about">About</string>
     <string name="product_name_tv">Nume</string>
     <string name="menu_add_product">Add product</string>
-    <string name="menu_gosmart">Go smart</string>
     <string name="menu_sort">Sort</string>
-    <string name="menu_view_count">View count</string>
+    <string name="menu_show_count">Show count</string>
     <string name="menu_settings">Settings</string>
+    <string name="bg_color_key">bg_color</string>
+    <string name="products_file">products.txt</string>
+    <string name="menu_show_sensors">Show sensors</string>
+    <string name="menu_show_cam">Show cam</string>
 </resources>

@@ -3,6 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="tppa.shoponline">
 
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Features -->
+    <uses-feature android:name="android.hardware.location.gps" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -33,28 +44,32 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!--<activity-->
-            <!--android:name=".SettingsActivity"-->
-            <!--android:label="@string/title_activity_settings"-->
-            <!--android:parentActivityName=".MainActivity"-->
-            <!--tools:targetApi="jelly_bean">-->
+        <!-- <activity -->
+        <!-- android:name=".SettingsActivity" -->
+        <!-- android:label="@string/title_activity_settings" -->
+        <!-- android:parentActivityName=".MainActivity" -->
+        <!-- tools:targetApi="jelly_bean"> -->
 
-            <!--&lt;!&ndash; The meta-data tag is required if you support API level 15 and lower &ndash;&gt;-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value=".MainActivity" />-->
 
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.APPLICATION_PREFERENCES" />-->
+        <!-- &lt;!&ndash; The meta-data tag is required if you support API level 15 and lower &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.PARENT_ACTIVITY" -->
+        <!-- android:value=".MainActivity" /> -->
 
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.APPLICATION_PREFERENCES" /> -->
+
+
+        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
         <activity
             android:name=".ShopPrefActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity"
             tools:targetApi="jelly_bean">
+
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -65,6 +80,17 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity android:name=".SensorActivity" />
+        <activity android:name=".CameraActivity"
+            android:parentActivityName=".MainActivity"
+            tools:targetApi="jelly_bean">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+
         </activity>
     </application>
 

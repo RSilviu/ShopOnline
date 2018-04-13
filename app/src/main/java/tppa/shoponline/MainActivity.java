@@ -1,11 +1,14 @@
 package tppa.shoponline;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,15 +24,22 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     // ui related
     private ListView listView;
     private TextView textView;
-
-    private ArrayList<String> products;
     private ArrayAdapter<String> lvAdapter;
+
+
+    // data related
+    private ArrayList<String> products;
+    private boolean listChanged = false;
 
 
     // bundle related
@@ -62,13 +72,14 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add product");
         LayoutInflater inflater = this.getLayoutInflater();
-        View addProductView = inflater.inflate(R.layout.add_product, null);
+        @SuppressLint("InflateParams") View addProductView = inflater.inflate(R.layout.add_product, null);
         final EditText productInput = addProductView.findViewById(R.id.pname_et);
         builder.setView(addProductView);
         builder.setPositiveButton("Ok", (dialogInterface, i) -> {
             String productName = productInput.getText().toString();
             if (!productName.isEmpty()){
                 products.add(productName);
+                listChanged = true;
                 updateProducts();
             }
         });
@@ -84,17 +95,11 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //        builder.setTitle(itemName);
         builder.setMessage("Buy "+itemName+" ?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
 
-            }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        builder.setNegativeButton("No", (dialogInterface, i) -> {
 
-            }
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -112,9 +117,70 @@ public class MainActivity extends AppCompatActivity {
             startActivity(sendIntent);
     }
 
+    private void showSensors() {
+        startActivity(new Intent(this, SensorActivity.class));
+    }
 
-    protected void showSettings(){
+    private void showSettings(){
         startActivity(new Intent(this, ShopPrefActivity.class));
+    }
+
+    private void showCam(){
+        startActivity(new Intent(this, CameraActivity.class));
+    }
+
+
+    private int getDetailsBgColorPref(){
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        String lpKey = getResources().getString(R.string.bg_color_key);
+        String prefValue = sharedPreferences.getString(lpKey,"");
+        int colorId;
+        switch (prefValue) {
+            case "smart":
+                colorId = R.color.colorSmart;
+                break;
+            case "fresh":
+                colorId = R.color.colorFresh;
+                break;
+            case "hacker":
+                colorId = R.color.colorHacker;
+                break;
+            default:
+                colorId = R.color.colorPure;
+                break;
+        }
+        return ContextCompat.getColor(this, colorId);
+    }
+
+    private void saveProductsToInternalStorage(){
+        FileOutputStream fos;
+        String fileName = getResources().getString(R.string.products_file);
+        try {
+            fos = openFileOutput(fileName, Context.MODE_PRIVATE);
+            for (String s : products){
+                fos.write((s+"\n").getBytes());
+            }
+            fos.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void loadProductsFromInternalStorage(){
+        FileInputStream fis;
+        String fileName = getResources().getString(R.string.products_file);
+        String s;
+        try {
+            fis = openFileInput(fileName);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            while ((s = reader.readLine()) != null){
+                products.add(s.trim());
+            }
+            fis.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
@@ -129,15 +195,20 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Shop created...");
 
         products = new ArrayList<>();
-        products.add("a");
-        products.add("d");
-        products.add("b");
-        products.add("c");
+        loadProductsFromInternalStorage();
+
         lvAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, products);
         listView.setAdapter(lvAdapter);
         listView.setOnItemClickListener(mMessageClickedHandler);
 
+//        Context context = getApplicationContext();
+//        SharedPreferences sharedPrefs = context.getSharedPreferences(
+//                getString(R.string.shared_prefs), Context.MODE_PRIVATE);
+
+        // restore details bg
+        int detailsColor = getDetailsBgColorPref();
+        textView.setBackgroundColor(detailsColor);
     }
 
     @Override
@@ -149,6 +220,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        int detailsColor = getDetailsBgColorPref();
+        textView.setBackgroundColor(detailsColor);
+
         Log.d(TAG, "onResume: Shop resumed...");
     }
 
@@ -167,6 +242,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (listChanged){
+            saveProductsToInternalStorage();
+        }
         Log.d(TAG, "onDestroy: Shop destroyed...");
     }
 
@@ -192,9 +270,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putStringArrayList(LV_DATA, products);
 
         ColorDrawable detailsBg = (ColorDrawable)textView.getBackground();
-        if (detailsBg != null){
-            outState.putInt(BG_COLOR, detailsBg.getColor());
-        }
+        outState.putInt(BG_COLOR, detailsBg.getColor());
     }
 
     @Override
@@ -207,7 +283,6 @@ public class MainActivity extends AppCompatActivity {
         updateProducts();
 
         int bgColor = savedState.getInt(BG_COLOR, -1);
-//        if (bgColor != -1)
         textView.setBackgroundColor(bgColor);
     }
 
@@ -220,19 +295,19 @@ public class MainActivity extends AppCompatActivity {
             case R.id.add:
                 showAddDialog();
                 return true;
-            case R.id.gs:
-                Log.d(MENU, "onOptionsItemSelected: ");
-                textView.setBackgroundColor(ContextCompat.
-                        getColor(getApplicationContext(),R.color.colorSmart)); // dynamic in shared
-                                                                               // prefs
-                return true;
             case R.id.sort:
                 Log.d(MENU, "onOptionsItemSelected: ");
                 products.sort(String::compareToIgnoreCase);
                 updateProducts();
                 return true;
+            case R.id.cam:
+                showCam();
+                return true;
             case R.id.count:
                 sendCount();
+                return true;
+            case R.id.sensors:
+                showSensors();
                 return true;
             case R.id.settings:
                 // e.g.: show sorted, display color etc.

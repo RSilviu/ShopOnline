@@ -12,8 +12,8 @@
             android:title="@string/pref_title_display_name" />
 
         <ListPreference
-            android:defaultValue="-1"
-            android:key="bg_color"
+            android:defaultValue="0"
+            android:key="@string/bg_color_key"
             android:title="@string/pref_bg_color_title"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
